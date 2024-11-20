@@ -20,4 +20,22 @@ public class UsuarioService {
     public Page<Usuario> listarUsuarios(Pageable pageable) {
         return usuarioRepository.findAll(pageable);
     }
+
+    public Usuario atualizarUsuario(Long id, Usuario usuarioAtualizado) {
+        return usuarioRepository.findById(id)
+                .map(usuario -> {
+                    usuario.setNome(usuarioAtualizado.getNome());
+                    usuario.setEmail(usuarioAtualizado.getEmail());
+                    usuario.setTipoConta(usuarioAtualizado.getTipoConta());
+                    // Não atualizamos dataRegistro pois é gerado automaticamente
+                    return usuarioRepository.save(usuario);
+                })
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + id));
+    }
+
+    public void excluirUsuario(Long id) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + id));
+        usuarioRepository.delete(usuario);
+    }
 }

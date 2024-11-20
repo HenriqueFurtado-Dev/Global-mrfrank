@@ -27,4 +27,24 @@ public class UsuarioController {
     public ResponseEntity<Page<Usuario>> listarUsuarios(Pageable pageable) {
         return ResponseEntity.ok(usuarioService.listarUsuarios(pageable));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Usuario> atualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuarioAtualizado) {
+        try {
+            Usuario usuario = usuarioService.atualizarUsuario(id, usuarioAtualizado);
+            return ResponseEntity.ok(usuario);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> excluirUsuario(@PathVariable Long id) {
+        try {
+            usuarioService.excluirUsuario(id);
+            return ResponseEntity.noContent().build(); // 204 No Content
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

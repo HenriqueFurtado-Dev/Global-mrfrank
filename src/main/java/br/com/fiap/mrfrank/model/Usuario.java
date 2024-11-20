@@ -20,16 +20,16 @@ public class Usuario {
     private Long id;
 
     @NotBlank
-    @Column(name = "NOME", nullable = false)
+    @Column(name = "NOME", nullable = false, length = 100)
     private String nome;
 
     @Email
     @NotBlank
-    @Column(name = "EMAIL", unique = true, nullable = false)
+    @Column(name = "EMAIL", unique = true, nullable = false, length = 150)
     private String email;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "TIPO_CONTA", nullable = false)
+    @Column(name = "TIPO_CONTA", nullable = false, length = 20)
     private TipoConta tipoConta;
 
     @CreationTimestamp
