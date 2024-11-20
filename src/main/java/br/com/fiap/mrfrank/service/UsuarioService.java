@@ -2,40 +2,39 @@ package br.com.fiap.mrfrank.service;
 
 import br.com.fiap.mrfrank.model.Usuario;
 import br.com.fiap.mrfrank.repository.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 
 @Service
+@RequiredArgsConstructor
 public class UsuarioService {
+    private final UsuarioRepository repository;
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-
-    public Usuario salvarUsuario(Usuario usuario) {
-        return usuarioRepository.save(usuario);
+    public List<Usuario> findAll() {
+        return repository.findAll();
     }
 
-    public Page<Usuario> listarUsuarios(Pageable pageable) {
-        return usuarioRepository.findAll(pageable);
+    public Usuario findById(Long id) {
+        return repository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
     }
 
-    public Usuario atualizarUsuario(Long id, Usuario usuarioAtualizado) {
-        return usuarioRepository.findById(id)
-                .map(usuario -> {
-                    usuario.setNome(usuarioAtualizado.getNome());
-                    usuario.setEmail(usuarioAtualizado.getEmail());
-                    usuario.setTipoConta(usuarioAtualizado.getTipoConta());
-                    // Não atualizamos dataRegistro pois é gerado automaticamente
-                    return usuarioRepository.save(usuario);
-                })
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + id));
+    public Usuario save(Usuario usuario) {
+        return repository.save(usuario);
     }
 
-    public void excluirUsuario(Long id) {
-        Usuario usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + id));
-        usuarioRepository.delete(usuario);
+    public Usuario update(Long id, Usuario usuarioAtualizado) {
+        Usuario usuario = findById(id); // Lança exceção se o ID não for encontrado
+
+        usuario.setNome(usuarioAtualizado.getNome());
+        usuario.setEmail(usuarioAtualizado.getEmail());
+        usuario.setTipoConta(usuarioAtualizado.getTipoConta());
+
+        return repository.save(usuario); // Salva o usuário atualizado
+    }
+
+    public void deleteById(Long id) {
+        repository.deleteById(id);
     }
 }

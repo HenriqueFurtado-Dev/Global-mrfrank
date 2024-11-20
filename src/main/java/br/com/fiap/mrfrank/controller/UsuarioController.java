@@ -10,41 +10,44 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/usuarios")
+@RequestMapping("/usuarios")
+@RequiredArgsConstructor
 public class UsuarioController {
-
-    @Autowired
-    private UsuarioService usuarioService;
-
-    @PostMapping
-    public ResponseEntity<Usuario> criarUsuario(@Valid @RequestBody Usuario usuario) {
-        Usuario novoUsuario = usuarioService.salvarUsuario(usuario);
-        return ResponseEntity.ok(novoUsuario);
-    }
+    private final UsuarioService service;
 
     @GetMapping
-    public ResponseEntity<Page<Usuario>> listarUsuarios(Pageable pageable) {
-        return ResponseEntity.ok(usuarioService.listarUsuarios(pageable));
+    public List<Usuario> findAll() {
+        return service.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public Usuario findById(@PathVariable Long id) {
+        return service.findById(id);
+    }
+
+    @PostMapping
+    public Usuario save(@RequestBody Usuario usuario) {
+        return service.save(usuario);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Usuario> atualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuarioAtualizado) {
-        try {
-            Usuario usuario = usuarioService.atualizarUsuario(id, usuarioAtualizado);
-            return ResponseEntity.ok(usuario);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public Usuario update(@PathVariable Long id, @RequestBody Usuario usuario) {
+        return service.update(id, usuario);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluirUsuario(@PathVariable Long id) {
-        try {
-            usuarioService.excluirUsuario(id);
-            return ResponseEntity.noContent().build(); // 204 No Content
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public void deleteById(@PathVariable Long id) {
+        service.deleteById(id);
     }
 }
