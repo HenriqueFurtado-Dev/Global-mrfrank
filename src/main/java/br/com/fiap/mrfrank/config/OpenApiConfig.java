@@ -15,9 +15,9 @@ public class OpenApiConfig {
     public OpenAPI springShopOpenAPI() {
         return new OpenAPI()
                 .info(new Info().title("API de Usuários e Relatórios")
-                        .description("Documentação da API para gerenciamento de usuários e relatórios.")
+                        .description("MrFrank - Documentação da API Java - para gerenciamento de usuários e relatórios.")
                         .version("v0.0.1")
-                        .contact(new Contact().name("Seu Nome").email("seu.email@exemplo.com"))
+                        .contact(new Contact().name("Carlos henrique | RM: 553597").email("rm553597@fiap.com.br"))
                         .license(new License().name("Apache 2.0").url("http://springdoc.org")));
     }
 }
