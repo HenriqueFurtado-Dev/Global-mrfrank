@@ -12,17 +12,17 @@ public class LogEvento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String tipoEvento;
+    private String tipoEvento; // Exemplo: "Alerta", "Automação", etc.
 
-    private String descricao;
+    private String descricao; // Detalhes sobre o evento
 
     private LocalDateTime dataHora = LocalDateTime.now();
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id")
+    @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
     @ManyToOne
-    @JoinColumn(name = "dispositivo_id")
+    @JoinColumn(name = "dispositivo_id", nullable = false)
     private DispositivoConsumo dispositivo;
 }
