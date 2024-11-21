@@ -2,23 +2,18 @@ package br.com.fiap.mrfrank.controller;
 
 import br.com.fiap.mrfrank.model.Usuario;
 import br.com.fiap.mrfrank.service.UsuarioService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -26,28 +21,58 @@ import java.util.List;
 public class UsuarioController {
     private final UsuarioService service;
 
+    // GET: Listar Todos os Usuários
     @GetMapping
-    public List<Usuario> findAll() {
-        return service.findAll();
+    public ResponseEntity<CollectionModel<EntityModel<Usuario>>> findAll() {
+        List<EntityModel<Usuario>> usuarios = service.findAll().stream()
+                .map(usuario -> EntityModel.of(usuario,
+                        WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UsuarioController.class).findById(usuario.getId())).withSelfRel(),
+                        WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UsuarioController.class).findAll()).withRel("usuarios")))
+                .collect(Collectors.toList());
+
+        CollectionModel<EntityModel<Usuario>> collectionModel = CollectionModel.of(usuarios,
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UsuarioController.class).findAll()).withSelfRel());
+
+        return ResponseEntity.ok(collectionModel);
     }
 
+    // GET: Buscar Usuário por ID
     @GetMapping("/{id}")
-    public Usuario findById(@PathVariable Long id) {
-        return service.findById(id);
+    public ResponseEntity<EntityModel<Usuario>> findById(@PathVariable Long id) {
+        Usuario usuario = service.findById(id);
+        EntityModel<Usuario> entityModel = EntityModel.of(usuario,
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UsuarioController.class).findById(id)).withSelfRel(),
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UsuarioController.class).findAll()).withRel("usuarios"));
+
+        return ResponseEntity.ok(entityModel);
     }
 
+    // POST: Inserir Usuário
     @PostMapping
-    public Usuario save(@RequestBody Usuario usuario) {
-        return service.save(usuario);
+    public ResponseEntity<EntityModel<Usuario>> save(@Validated @RequestBody Usuario usuario) {
+        Usuario novoUsuario = service.save(usuario);
+        EntityModel<Usuario> entityModel = EntityModel.of(novoUsuario,
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UsuarioController.class).findById(novoUsuario.getId())).withSelfRel(),
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UsuarioController.class).findAll()).withRel("usuarios"));
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(entityModel);
     }
 
+    // PUT: Atualizar Usuário
     @PutMapping("/{id}")
-    public Usuario update(@PathVariable Long id, @RequestBody Usuario usuario) {
-        return service.update(id, usuario);
+    public ResponseEntity<EntityModel<Usuario>> update(@PathVariable Long id, @RequestBody Usuario usuario) {
+        Usuario usuarioAtualizado = service.update(id, usuario);
+        EntityModel<Usuario> entityModel = EntityModel.of(usuarioAtualizado,
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UsuarioController.class).findById(id)).withSelfRel(),
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UsuarioController.class).findAll()).withRel("usuarios"));
+
+        return ResponseEntity.ok(entityModel);
     }
 
+    // DELETE: Deletar Usuário
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         service.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }
