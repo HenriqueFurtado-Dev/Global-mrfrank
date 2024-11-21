@@ -2,8 +2,13 @@ package br.com.fiap.mrfrank.service;
 
 import br.com.fiap.mrfrank.model.Usuario;
 import br.com.fiap.mrfrank.repository.UsuarioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 
 
