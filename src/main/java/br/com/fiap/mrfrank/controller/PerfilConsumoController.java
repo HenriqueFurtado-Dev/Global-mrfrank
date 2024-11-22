@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/perfis")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 @Tag(name = "Perfis de Consumo", description = "Operações relacionadas a perfis de consumo")
 public class PerfilConsumoController {
     private final PerfilConsumoService service;

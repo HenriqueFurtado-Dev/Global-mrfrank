@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/usuarios")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 @Tag(name = "Usuários", description = "Operações relacionadas a usuários")
 public class UsuarioController {
     private final UsuarioService service;

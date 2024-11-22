@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/dispositivos")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 @Tag(name = "Dispositivos de Consumo", description = "Operações relacionadas a dispositivos de consumo")
 public class DispositivoConsumoController {
     private final DispositivoConsumoService service;

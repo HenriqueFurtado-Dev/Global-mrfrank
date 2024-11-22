@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/logs")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 @Tag(name = "Logs de Eventos", description = "Operações relacionadas a logs de eventos")
 public class LogEventoController {
     private final LogEventoService service;
