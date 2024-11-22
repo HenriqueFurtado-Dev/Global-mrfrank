@@ -14,7 +14,7 @@ RUN mvn clean install -DskipTests
 FROM openjdk:17-slim
 
 # Copiar o arquivo JAR gerado da etapa de construção
-COPY --from=build /app/target/PrevDent-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /app/target/mrfrank-0.0.1-SNAPSHOT.jar app.jar
 
 # Expor a porta que a aplicação vai usar
 EXPOSE 8080
